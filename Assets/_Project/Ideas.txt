@@ -1,0 +1,10 @@
+RTS:
+
+- Cases hexagonales
+- On pose les bâtiments en fonctions des cases
+- Faire des liens avec les chemins -> les unités vont plus vite
+
+
+Grid:
+
+- 
