@@ -15,7 +15,6 @@ namespace _Project.Runtime.Scripts
         //Input
         [SerializeField] private InputActionReference _select;
         
-        
         //Selector Box
         private Vector2 _mouseStartPos;
         private Vector2 _mouseEndPos;
@@ -26,6 +25,8 @@ namespace _Project.Runtime.Scripts
         //Selector Mesh
         [SerializeField] private MeshFilter _selectorMeshFilter;
         private Mesh _selectorMesh;
+        [SerializeField] private float _startDistanceFromCamera = 0.1f;
+        [SerializeField] private float _endDistanceFromCamera = 50f;
         
         //Selection
         private List<ISelectable> _selection;
@@ -104,45 +105,92 @@ namespace _Project.Runtime.Scripts
 
         private void UpdateSelectorMesh()
         {
-            Ray minRay = Camera.main.ScreenPointToRay(_selectorBox.rect.min);
-            Ray topLeftRay = Camera.main.ScreenPointToRay(new Vector2(_selectorBox.rect.min.x, _selectorBox.rect.max.y));
-            Ray maxRay = Camera.main.ScreenPointToRay(_selectorBox.rect.max);
-            Ray bottomRightRay = Camera.main.ScreenPointToRay(new Vector2(_selectorBox.rect.max.x, _selectorBox.rect.min.y));
+            Vector3[] corners = new Vector3[4];
+            _selectorBox.GetWorldCorners(corners);
             
-            Vector3 fbl = minRay.origin + minRay.direction * 0.1f;
-            Vector3 ftl = topLeftRay.origin + topLeftRay.direction * 0.1f;
-            Vector3 ftr = maxRay.origin + maxRay.direction * 0.1f;
-            Vector3 fbr = bottomRightRay.origin + bottomRightRay.direction * 0.1f;
 
-            Vector3 bbl = minRay.origin + minRay.direction * 10f;
-            Vector3 btl = topLeftRay.origin + topLeftRay.direction * 10f;
-            Vector3 btr = maxRay.origin + maxRay.direction * 10f;
-            Vector3 bbr = bottomRightRay.origin + bottomRightRay.direction * 10f;
+            Ray[] rays = new Ray[4];
 
-            _selectorMesh = _selectorMeshFilter.mesh;
+            for (int i = 0; i < corners.Length; i++)
+            {
+                rays[i] = Camera.main.ScreenPointToRay(corners[i]);
+            }
 
+            Vector3[] frontPoints = new Vector3[4];
+            Vector3[] backPoints = new Vector3[4];
+
+            for (int i = 0; i < rays.Length; i++)
+            {
+                frontPoints[i] = rays[i].origin + rays[i].direction * _startDistanceFromCamera;
+            }
+            
+            for (int i = 0; i < rays.Length; i++)
+            {
+                backPoints[i] = rays[i].origin + rays[i].direction * _endDistanceFromCamera;
+            }
+            
             Vector3[] newVertices = new Vector3[]
             {
                 //Front
-                fbl, ftl, ftr, fbr,
-
+                frontPoints[0], frontPoints[1], frontPoints[2], frontPoints[3],
+                
                 //Right
-                fbr, bbr, btr, ftr,
+                frontPoints[3], backPoints[3], backPoints[2], frontPoints[2],
                 
                 //Top
-                ftr, btr, btl, ftl,
+                frontPoints[2], backPoints[2], backPoints[1], frontPoints[1],
                 
                 //Left
-                ftl, btl, bbl, fbl,
+                frontPoints[1], backPoints[1], backPoints[0], frontPoints[0],
                 
                 //Bottom
-                fbl, fbr, bbr, bbl,
+                frontPoints[0], frontPoints[3], backPoints[3], backPoints[0],
                 
                 //Back
-                bbl, btl, btr, bbr
+                backPoints[0], backPoints[1], backPoints[2], backPoints[3]
             };
+            
+            // Ray minRay = Camera.main.ScreenPointToRay(corners[0]);
+            // Ray topLeftRay = Camera.main.ScreenPointToRay(corners[1]);
+            // Ray maxRay = Camera.main.ScreenPointToRay(corners[2]);
+            // Ray bottomRightRay = Camera.main.ScreenPointToRay(corners[3]);
+            
+            // Vector3 fbl = minRay.origin + minRay.direction * _startDistanceFromCamera;
+            // Vector3 ftl = topLeftRay.origin + topLeftRay.direction * _startDistanceFromCamera;
+            // Vector3 ftr = maxRay.origin + maxRay.direction * _startDistanceFromCamera;
+            // Vector3 fbr = bottomRightRay.origin + bottomRightRay.direction * _startDistanceFromCamera;
+            //
+            // Vector3 bbl = minRay.origin + minRay.direction * _endDistanceFromCamera;
+            // Vector3 btl = topLeftRay.origin + topLeftRay.direction * _endDistanceFromCamera;
+            // Vector3 btr = maxRay.origin + maxRay.direction * _endDistanceFromCamera;
+            // Vector3 bbr = bottomRightRay.origin + bottomRightRay.direction * _endDistanceFromCamera;
+            //
+            // _selectorMesh = _selectorMeshFilter.mesh;
+            //
+            // Vector3[] newVertices = new Vector3[]
+            // {
+            //     //Front
+            //     fbl, ftl, ftr, fbr,
+            //
+            //     //Right
+            //     fbr, bbr, btr, ftr,
+            //     
+            //     //Top
+            //     ftr, btr, btl, ftl,
+            //     
+            //     //Left
+            //     ftl, btl, bbl, fbl,
+            //     
+            //     //Bottom
+            //     fbl, fbr, bbr, bbl,
+            //     
+            //     //Back
+            //     bbl, btl, btr, bbr
+            // };
 
-            _selectorMesh.vertices = newVertices;
+            _selectorMesh = _selectorMeshFilter.mesh;
+            _selectorMesh.SetVertices(newVertices);
+            _selectorMesh.RecalculateBounds();
         }
         
         private void OnEnable()
