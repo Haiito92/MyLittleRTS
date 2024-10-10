@@ -109,17 +109,40 @@ namespace _Project.Runtime.Scripts
             Ray maxRay = Camera.main.ScreenPointToRay(_selectorBox.rect.max);
             Ray bottomRightRay = Camera.main.ScreenPointToRay(new Vector2(_selectorBox.rect.max.x, _selectorBox.rect.min.y));
             
-            Vector3 p0 = minRay.origin + minRay.direction * 10f;
-            Vector3 p1 = topLeftRay.origin + topLeftRay.direction * 10f;
-            Vector3 p2 = maxRay.origin + maxRay.direction * 10f;
-            Vector3 p3 = bottomRightRay.origin + bottomRightRay.direction * 10f;
+            Vector3 fbl = minRay.origin + minRay.direction * 0.1f;
+            Vector3 ftl = topLeftRay.origin + topLeftRay.direction * 0.1f;
+            Vector3 ftr = maxRay.origin + maxRay.direction * 0.1f;
+            Vector3 fbr = bottomRightRay.origin + bottomRightRay.direction * 0.1f;
 
-            Vector3 p4 = minRay.origin + minRay.direction * 100f;
-            Vector3 p5 = topLeftRay.origin + topLeftRay.direction * 100f;
-            Vector3 p6 = maxRay.origin + maxRay.direction * 100f;
-            Vector3 p7 = bottomRightRay.origin + bottomRightRay.direction * 100f;
+            Vector3 bbl = minRay.origin + minRay.direction * 10f;
+            Vector3 btl = topLeftRay.origin + topLeftRay.direction * 10f;
+            Vector3 btr = maxRay.origin + maxRay.direction * 10f;
+            Vector3 bbr = bottomRightRay.origin + bottomRightRay.direction * 10f;
 
-            
+            _selectorMesh = _selectorMeshFilter.mesh;
+
+            Vector3[] newVertices = new[]
+            {
+                //Front
+                fbl, ftl, ftr, fbr,
+
+                //Top
+                ftl, ftr, btr, btl,
+
+                //Right
+                ftr, fbr, bbr, btr,
+
+                //Bottom
+                fbr, fbl, bbl, bbr,
+                
+                //Left
+                fbl, ftl, btl, bbl,
+
+                //Back
+                bbl, btl, btr, bbr
+            };
+
+            _selectorMesh.vertices = newVertices;
         }
         
         private void OnEnable()
