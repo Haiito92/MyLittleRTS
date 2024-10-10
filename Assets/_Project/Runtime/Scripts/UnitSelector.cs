@@ -121,7 +121,7 @@ namespace _Project.Runtime.Scripts
 
             _selectorMesh = _selectorMeshFilter.mesh;
 
-            Vector3[] newVertices = new[]
+            Vector3[] newVertices = new Vector3[]
             {
                 //Front
                 fbl, ftl, ftr, fbr,
