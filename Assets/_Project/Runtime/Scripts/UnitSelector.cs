@@ -108,18 +108,18 @@ namespace _Project.Runtime.Scripts
             Ray topLeftRay = Camera.main.ScreenPointToRay(new Vector2(_selectorBox.rect.min.x, _selectorBox.rect.max.y));
             Ray maxRay = Camera.main.ScreenPointToRay(_selectorBox.rect.max);
             Ray bottomRightRay = Camera.main.ScreenPointToRay(new Vector2(_selectorBox.rect.max.x, _selectorBox.rect.min.y));
-
             
             Vector3 p0 = minRay.origin + minRay.direction * 10f;
             Vector3 p1 = topLeftRay.origin + topLeftRay.direction * 10f;
             Vector3 p2 = maxRay.origin + maxRay.direction * 10f;
             Vector3 p3 = bottomRightRay.origin + bottomRightRay.direction * 10f;
 
-            Physics.Raycast(minRay, out RaycastHit hitInfo, 100f);
-            
+            Vector3 p4 = minRay.origin + minRay.direction * 100f;
+            Vector3 p5 = topLeftRay.origin + topLeftRay.direction * 100f;
+            Vector3 p6 = maxRay.origin + maxRay.direction * 100f;
+            Vector3 p7 = bottomRightRay.origin + bottomRightRay.direction * 100f;
 
-            //Debug.DrawRay(minRay.origin, minRay.direction, Color.red, 10.0f);
-            //Debug.DrawRay(maxRay.origin, maxRay.direction, Color.red, 10.0f);
+            
         }
         
         private void OnEnable()
