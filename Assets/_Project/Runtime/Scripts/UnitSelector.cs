@@ -126,18 +126,18 @@ namespace _Project.Runtime.Scripts
                 //Front
                 fbl, ftl, ftr, fbr,
 
-                //Top
-                ftl, ftr, btr, btl,
-
                 //Right
-                ftr, fbr, bbr, btr,
-
-                //Bottom
-                fbr, fbl, bbl, bbr,
+                fbr, bbr, btr, ftr,
+                
+                //Top
+                ftr, btr, btl, ftl,
                 
                 //Left
-                fbl, ftl, btl, bbl,
-
+                ftl, btl, bbl, fbl,
+                
+                //Bottom
+                fbl, fbr, bbr, bbl,
+                
                 //Back
                 bbl, btl, btr, bbr
             };
