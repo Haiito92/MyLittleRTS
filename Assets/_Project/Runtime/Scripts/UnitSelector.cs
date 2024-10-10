@@ -69,13 +69,7 @@ namespace _Project.Runtime.Scripts
         {
             while (_isSelecting)
             {
-                _mouseEndPos = Mouse.current.position.value;
-
-                float width = _mouseEndPos.x - _mouseStartPos.x;
-                float height = _mouseEndPos.y - _mouseStartPos.y;
-
-                _selectorBox.anchoredPosition = _mouseStartPos + new Vector2(width / 2, height / 2);
-                _selectorBox.sizeDelta = new Vector2(Mathf.Abs(width), Mathf.Abs(height));
+                UpdateSelectorBox();
 
                 yield return null;
             }
@@ -89,12 +83,43 @@ namespace _Project.Runtime.Scripts
                 _selectionUpdateCoroutine = null;
             }
             
+            UpdateSelectorMesh();
+            
             _isSelecting = false;
             OnSelectionEndEvent.Invoke();
                         
             _selectorBox.gameObject.SetActive(false);
-            
+        }
+
+        private void UpdateSelectorBox()
+        {
             _mouseEndPos = Mouse.current.position.value;
+
+            float width = _mouseEndPos.x - _mouseStartPos.x;
+            float height = _mouseEndPos.y - _mouseStartPos.y;
+
+            _selectorBox.anchoredPosition = _mouseStartPos + new Vector2(width / 2, height / 2);
+            _selectorBox.sizeDelta = new Vector2(Mathf.Abs(width), Mathf.Abs(height));
+        }
+
+        private void UpdateSelectorMesh()
+        {
+            Ray minRay = Camera.main.ScreenPointToRay(_selectorBox.rect.min);
+            Ray topLeftRay = Camera.main.ScreenPointToRay(new Vector2(_selectorBox.rect.min.x, _selectorBox.rect.max.y));
+            Ray maxRay = Camera.main.ScreenPointToRay(_selectorBox.rect.max);
+            Ray bottomRightRay = Camera.main.ScreenPointToRay(new Vector2(_selectorBox.rect.max.x, _selectorBox.rect.min.y));
+
+            
+            Vector3 p0 = minRay.origin + minRay.direction * 10f;
+            Vector3 p1 = topLeftRay.origin + topLeftRay.direction * 10f;
+            Vector3 p2 = maxRay.origin + maxRay.direction * 10f;
+            Vector3 p3 = bottomRightRay.origin + bottomRightRay.direction * 10f;
+
+            Physics.Raycast(minRay, out RaycastHit hitInfo, 100f);
+            
+
+            //Debug.DrawRay(minRay.origin, minRay.direction, Color.red, 10.0f);
+            //Debug.DrawRay(maxRay.origin, maxRay.direction, Color.red, 10.0f);
         }
         
         private void OnEnable()
