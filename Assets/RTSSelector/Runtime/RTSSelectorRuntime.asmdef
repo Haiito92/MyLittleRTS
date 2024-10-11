@@ -1,9 +1,8 @@
 {
-    "name": "Runtime",
+    "name": "RTSSelectorRuntime",
     "rootNamespace": "",
     "references": [
-        "GUID:75469ad4d38634e559750d17036d5f7c",
-        "GUID:902f5e8fb7077f143ae5e7b90ea1d5ee"
+        "GUID:75469ad4d38634e559750d17036d5f7c"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
