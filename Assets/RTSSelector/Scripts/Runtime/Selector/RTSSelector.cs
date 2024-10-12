@@ -1,18 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
-using RTSSelector.Scripts.Runtime.Interfaces;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
 
 namespace RTSSelector.Scripts.Runtime.Selector
 {
+    using Interfaces;
+    
     public class RTSSelector : MonoBehaviour
     {
         //Fields//
-        //Input
-        [SerializeField] private InputActionReference _select;
-        
         //Selector Box
         private Vector2 _mouseStartPos;
         private Vector2 _mouseEndPos;
@@ -21,10 +18,10 @@ namespace RTSSelector.Scripts.Runtime.Selector
         private Coroutine _selectionUpdateCoroutine;
             
         //Selector Mesh
-        [SerializeField] private MeshFilter _selectorMeshFilter;
-        private Mesh _selectorMesh;
-        [SerializeField] private float _startDistanceFromCamera = 0.1f;
-        [SerializeField] private float _endDistanceFromCamera = 50f;
+        // [SerializeField] private MeshFilter _selectorMeshFilter;
+        // private Mesh _selectorMesh;
+        // [SerializeField] private float _startDistanceFromCamera = 0.1f;
+        // [SerializeField] private float _endDistanceFromCamera = 50f;
         
         //Selection
         private List<IRTSSelectable> _selection;
@@ -37,23 +34,33 @@ namespace RTSSelector.Scripts.Runtime.Selector
         [SerializeField] private UnityEvent OnSelectionStartEvent;
         [SerializeField] private UnityEvent OnSelectionEndEvent;
 
+        #region Singleton
+
+        private static RTSSelector _instance;
+        public static RTSSelector Instance => _instance;
+
+        #endregion
+        
         private void Awake()
         {
+            if (_instance != null && _instance != this)
+            {
+                Destroy(this);
+            }
+            else
+            {
+                _instance = this;
+            }
+            
             OnSelectionStartEvent.AddListener(() => OnSelectionStart?.Invoke());
             OnSelectionEndEvent.AddListener(() => OnSelectionEnd?.Invoke());
         }
 
-        private void OnSelectInputActionEvent(InputAction.CallbackContext ctx)
-        {
-            if(ctx.started) StartSelection();
-            if(ctx.canceled) FinishSelection();
-        }
-
-        private void StartSelection()
+        public void StartSelection(Vector2 mouseStartPos)
         {
             _isSelecting = true;
             
-            _mouseStartPos = Mouse.current.position.value;
+            _mouseStartPos = mouseStartPos;
             _selectorBox.anchoredPosition = _mouseStartPos;
             
             _selectorBox.gameObject.SetActive(true);
@@ -61,20 +68,22 @@ namespace RTSSelector.Scripts.Runtime.Selector
             OnSelectionStartEvent.Invoke();
             
             if(_selectionUpdateCoroutine != null) return;
-            _selectionUpdateCoroutine = StartCoroutine(SelectionUpdate());
+            _selectionUpdateCoroutine = StartCoroutine(UpdateSelection());
         }
 
-        private IEnumerator SelectionUpdate()
+        private IEnumerator UpdateSelection()
         {
             while (_isSelecting)
             {
-                UpdateSelectorBox();
-
+                //UpdateSelectorBox(Mouse.current.position.value);
+                
+                Debug.Log("Selecting");
+                
                 yield return null;
             }
         }
         
-        private void FinishSelection()
+        public void FinishSelection()
         {
             if (_selectionUpdateCoroutine != null)
             {
@@ -90,9 +99,9 @@ namespace RTSSelector.Scripts.Runtime.Selector
             _selectorBox.gameObject.SetActive(false);
         }
 
-        private void UpdateSelectorBox()
+        public void UpdateSelectorBox(Vector2 mouseCurrentPos)
         {
-            _mouseEndPos = Mouse.current.position.value;
+            _mouseEndPos = mouseCurrentPos;
 
             float width = _mouseEndPos.x - _mouseStartPos.x;
             float height = _mouseEndPos.y - _mouseStartPos.y;
@@ -152,23 +161,5 @@ namespace RTSSelector.Scripts.Runtime.Selector
         //     _selectorMesh.SetVertices(newVertices);
         //     _selectorMesh.RecalculateBounds();
         // }
-        
-        private void OnEnable()
-        {
-            if(_select != null)
-            {
-                _select.action.started += OnSelectInputActionEvent;
-                _select.action.canceled += OnSelectInputActionEvent;
-            }
-        }
-
-        private void OnDisable()
-        {
-            if(_select != null)
-            {
-                _select.action.started -= OnSelectInputActionEvent;
-                _select.action.canceled -= OnSelectInputActionEvent;
-            }
-        }
     }
 }

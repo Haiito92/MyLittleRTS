@@ -1,9 +1,9 @@
-using RTSSelector.Scripts.Runtime.Interfaces;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace RTSSelector.Scripts.Runtime.Selectable
 {
+    using Interfaces;
     public class RTSSelectable : MonoBehaviour, IRTSSelectable
     {
         //Fields
