@@ -41,10 +41,7 @@ namespace RTSSelector.Scripts.Runtime
             Vector3 boundsMax = _collider.bounds.max;
                 
             Vector2[] points = new Vector2[8];
-            foreach (var VARIABLE in COLLECTION)
-            {
-                
-            }
+            
             
             return new Rect();
         }
