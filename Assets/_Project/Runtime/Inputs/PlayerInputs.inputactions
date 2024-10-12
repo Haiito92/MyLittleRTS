@@ -11,8 +11,17 @@
                     "id": "2b76b4e2-db1f-4624-af4f-be0ad169262a",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Hold(duration=0.4)",
+                    "interactions": "Hold",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "MouseMove",
+                    "type": "Value",
+                    "id": "e5b5c72a-8ef5-4fd6-87d3-a297618b5c77",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -24,6 +33,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3b247aac-09d7-41d6-aee2-f207a9906691",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MouseMove",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

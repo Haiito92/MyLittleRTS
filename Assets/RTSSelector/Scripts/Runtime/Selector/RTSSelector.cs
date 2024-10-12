@@ -6,7 +6,8 @@ using UnityEngine.Events;
 namespace RTSSelector.Scripts.Runtime.Selector
 {
     using Interfaces;
-    
+    using Selectable;
+
     public class RTSSelector : MonoBehaviour
     {
         //Fields//
@@ -15,7 +16,6 @@ namespace RTSSelector.Scripts.Runtime.Selector
         private Vector2 _mouseEndPos;
         [SerializeField] private RectTransform _selectorBox;
         private bool _isSelecting = false;
-        private Coroutine _selectionUpdateCoroutine;
             
         //Selector Mesh
         // [SerializeField] private MeshFilter _selectorMeshFilter;
@@ -23,9 +23,6 @@ namespace RTSSelector.Scripts.Runtime.Selector
         // [SerializeField] private float _startDistanceFromCamera = 0.1f;
         // [SerializeField] private float _endDistanceFromCamera = 50f;
         
-        //Selection
-        private List<IRTSSelectable> _selection;
-
         //Actions//
         public UnityAction OnSelectionStart;
         public UnityAction OnSelectionEnd;
@@ -43,6 +40,7 @@ namespace RTSSelector.Scripts.Runtime.Selector
         
         private void Awake()
         {
+            //Setup Singleton
             if (_instance != null && _instance != this)
             {
                 Destroy(this);
@@ -51,6 +49,8 @@ namespace RTSSelector.Scripts.Runtime.Selector
             {
                 _instance = this;
             }
+            
+            //Subscribe UnityActions Invoke to their corresponding UnityEvent
             
             OnSelectionStartEvent.AddListener(() => OnSelectionStart?.Invoke());
             OnSelectionEndEvent.AddListener(() => OnSelectionEnd?.Invoke());
@@ -66,37 +66,22 @@ namespace RTSSelector.Scripts.Runtime.Selector
             _selectorBox.gameObject.SetActive(true);
             
             OnSelectionStartEvent.Invoke();
-            
-            if(_selectionUpdateCoroutine != null) return;
-            _selectionUpdateCoroutine = StartCoroutine(UpdateSelection());
         }
 
-        private IEnumerator UpdateSelection()
+        public void UpdateSelection(Vector2 currentMousePos)
         {
-            while (_isSelecting)
-            {
-                //UpdateSelectorBox(Mouse.current.position.value);
-                
-                Debug.Log("Selecting");
-                
-                yield return null;
-            }
+            Debug.Log("Selecting");
+            UpdateSelectorBox(currentMousePos);
         }
         
-        public void FinishSelection()
+        public List<RTSSelectable> FinishSelection()
         {
-            if (_selectionUpdateCoroutine != null)
-            {
-                StopCoroutine(_selectionUpdateCoroutine);
-                _selectionUpdateCoroutine = null;
-            }
-            
-            //UpdateSelectorMesh();
-            
             _isSelecting = false;
             OnSelectionEndEvent.Invoke();
                         
             _selectorBox.gameObject.SetActive(false);
+
+            return null;
         }
 
         public void UpdateSelectorBox(Vector2 mouseCurrentPos)

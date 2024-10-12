@@ -8,10 +8,13 @@ namespace _Project.Runtime.Scripts.Core
 
     public class PlayerController : MonoBehaviour
     {
-        //Input
+        //Inputs
         [SerializeField] private InputActionReference _select;
+        [SerializeField] private InputActionReference _mouseMove;
 
+        //Selection
         private RTSSelector _rtsSelector;
+        private bool _isSelecting;
         
         private void Start()
         {
@@ -20,8 +23,25 @@ namespace _Project.Runtime.Scripts.Core
     
         private void OnSelectInputActionEvent(InputAction.CallbackContext ctx)
         {
-            if(ctx.started) _rtsSelector.StartSelection(Mouse.current.position.value);
-            if(ctx.canceled) _rtsSelector.FinishSelection();
+            if(ctx.started)
+            {
+                _rtsSelector.StartSelection(_mouseMove.action.ReadValue<Vector2>());
+                _isSelecting = true;
+            }
+            
+            if(ctx.canceled)
+            {
+                _isSelecting = false;
+                _rtsSelector.FinishSelection();
+            }
+        }
+
+        private void OnMouseMoveInputActionEvent(InputAction.CallbackContext ctx)
+        {
+            if(ctx.performed)
+            {
+                if(_isSelecting)_rtsSelector.UpdateSelection(ctx.ReadValue<Vector2>());
+            }
         }
     
         private void OnEnable()
@@ -31,6 +51,11 @@ namespace _Project.Runtime.Scripts.Core
                 _select.action.started += OnSelectInputActionEvent;
                 _select.action.canceled += OnSelectInputActionEvent;
             }
+            
+            if (_mouseMove != null)
+            {
+                _mouseMove.action.performed += OnMouseMoveInputActionEvent;
+            }
         }
 
         private void OnDisable()
@@ -39,6 +64,11 @@ namespace _Project.Runtime.Scripts.Core
             {
                 _select.action.started -= OnSelectInputActionEvent;
                 _select.action.canceled -= OnSelectInputActionEvent;
+            }
+
+            if (_mouseMove != null)
+            {
+                _mouseMove.action.performed -= OnMouseMoveInputActionEvent;
             }
         }
     }
