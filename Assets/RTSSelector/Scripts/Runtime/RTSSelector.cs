@@ -7,6 +7,10 @@ namespace RTSSelector.Scripts.Runtime
     public class RTSSelector : MonoBehaviour
     {
         //Fields//
+        //Selectables
+        private List<RTSSelectable> _allRtsSelectables;
+        private List<RTSSelectable> _currentSelection;
+        
         //Selector Box
         private Vector2 _mouseStartPos;
         private Vector2 _mouseEndPos;
@@ -27,6 +31,12 @@ namespace RTSSelector.Scripts.Runtime
         [SerializeField] private UnityEvent OnSelectionStartEvent;
         [SerializeField] private UnityEvent OnSelectionEndEvent;
 
+
+        #region Properties
+        public List<RTSSelectable> AllRtsSelectables => _allRtsSelectables;
+        public bool IsSelecting => _isSelecting;
+        #endregion
+        
         #region Singleton
 
         private static RTSSelector _instance;
@@ -46,14 +56,23 @@ namespace RTSSelector.Scripts.Runtime
                 _instance = this;
             }
             
-            //Subscribe UnityActions Invoke to their corresponding UnityEvent
+            //Setup Lists
+            _allRtsSelectables = new List<RTSSelectable>();
+            _currentSelection = new List<RTSSelectable>();
             
+            //Subscribe UnityActions Invoke to their corresponding UnityEvent
             OnSelectionStartEvent.AddListener(() => OnSelectionStart?.Invoke());
             OnSelectionEndEvent.AddListener(() => OnSelectionEnd?.Invoke());
         }
 
         public void StartSelection(Vector2 mouseStartPos)
         {
+            if (_currentSelection != null)
+            {
+                _currentSelection.ForEach(rtsSelectable => rtsSelectable.Unselect());
+                _currentSelection.Clear();
+            }
+            
             _isSelecting = true;
             
             _mouseStartPos = mouseStartPos;
@@ -66,7 +85,6 @@ namespace RTSSelector.Scripts.Runtime
 
         public void UpdateSelection(Vector2 currentMousePos)
         {
-            Debug.Log("Selecting");
             UpdateSelectorBox(currentMousePos);
         }
         
@@ -74,10 +92,13 @@ namespace RTSSelector.Scripts.Runtime
         {
             _isSelecting = false;
             OnSelectionEndEvent.Invoke();
-                        
+            
+            _currentSelection = _allRtsSelectables.FindAll(rtsSelectable => RectTransformUtility.RectangleContainsScreenPoint(_selectorBox, rtsSelectable.GetScreenPos()));
+            _currentSelection.ForEach(rtsSelectable => rtsSelectable.Select());
+            
             _selectorBox.gameObject.SetActive(false);
-
-            return null;
+            
+            return _currentSelection;
         }
 
         private void UpdateSelectorBox(Vector2 mouseCurrentPos)

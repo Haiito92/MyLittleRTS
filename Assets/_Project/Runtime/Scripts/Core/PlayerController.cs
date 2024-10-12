@@ -1,9 +1,10 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace _Project.Runtime.Scripts.Core
 {
+    
+    using RTSSelector.Scripts.Runtime;
     public class PlayerController : MonoBehaviour
     {
         //Inputs
@@ -11,12 +12,11 @@ namespace _Project.Runtime.Scripts.Core
         [SerializeField] private InputActionReference _mouseMove;
 
         //Selection
-        private RTSSelector.Scripts.Runtime.RTSSelector _rtsSelector;
-        private bool _isSelecting;
+        private RTSSelector _rtsSelector;
         
         private void Start()
         {
-            _rtsSelector = RTSSelector.Scripts.Runtime.RTSSelector.Instance;
+            _rtsSelector = RTSSelector.Instance;
         }
     
         private void OnSelectInputActionEvent(InputAction.CallbackContext ctx)
@@ -24,12 +24,10 @@ namespace _Project.Runtime.Scripts.Core
             if(ctx.started)
             {
                 _rtsSelector.StartSelection(_mouseMove.action.ReadValue<Vector2>());
-                _isSelecting = true;
             }
             
             if(ctx.canceled)
             {
-                _isSelecting = false;
                 _rtsSelector.FinishSelection();
             }
         }
@@ -38,7 +36,7 @@ namespace _Project.Runtime.Scripts.Core
         {
             if(ctx.performed)
             {
-                if(_isSelecting)_rtsSelector.UpdateSelection(ctx.ReadValue<Vector2>());
+                if(_rtsSelector.IsSelecting)_rtsSelector.UpdateSelection(ctx.ReadValue<Vector2>());
             }
         }
     

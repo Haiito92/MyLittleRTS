@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
@@ -20,6 +21,11 @@ namespace RTSSelector.Scripts.Runtime
         {
             SelectedEvent.AddListener(() => Selected?.Invoke());
             UnselectedEvent.AddListener(() => Unselected?.Invoke());
+        }
+
+        private void Start()
+        {
+            RTSSelector.Instance.AllRtsSelectables.Add(this);
         }
 
         public Vector2 GetScreenPos()
