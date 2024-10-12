@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using RTSSelector.Runtime.Interfaces;
+using RTSSelector.Scripts.Runtime.Interfaces;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-namespace RTSSelector.Runtime.Scripts
+namespace RTSSelector.Scripts.Runtime.Selector
 {
     public class RTSSelector : MonoBehaviour
     {
