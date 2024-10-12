@@ -8,6 +8,7 @@ namespace RTSSelector.Scripts.Runtime
     public class RTSSelectable : MonoBehaviour, IRTSSelectable
     {
         //Fields
+        [SerializeField] private Collider _collider;
     
         //Actions
         public event UnityAction Selected;
@@ -31,6 +32,21 @@ namespace RTSSelector.Scripts.Runtime
         public Vector2 GetScreenPos()
         {
             return Camera.main.WorldToScreenPoint(transform.position);
+        }
+
+        public Rect GetScreenRect()
+        {
+            Vector3[] boundVertices = new Vector3[8];
+            Vector3 boundsMin = _collider.bounds.min;
+            Vector3 boundsMax = _collider.bounds.max;
+                
+            Vector2[] points = new Vector2[8];
+            foreach (var VARIABLE in COLLECTION)
+            {
+                
+            }
+            
+            return new Rect();
         }
 
         public void Select()
