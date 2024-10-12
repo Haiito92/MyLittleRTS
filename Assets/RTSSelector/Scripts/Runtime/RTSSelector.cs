@@ -1,13 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace RTSSelector.Scripts.Runtime.Selector
+namespace RTSSelector.Scripts.Runtime
 {
-    using Interfaces;
-    using Selectable;
-
     public class RTSSelector : MonoBehaviour
     {
         //Fields//
@@ -84,7 +80,7 @@ namespace RTSSelector.Scripts.Runtime.Selector
             return null;
         }
 
-        public void UpdateSelectorBox(Vector2 mouseCurrentPos)
+        private void UpdateSelectorBox(Vector2 mouseCurrentPos)
         {
             _mouseEndPos = mouseCurrentPos;
 
