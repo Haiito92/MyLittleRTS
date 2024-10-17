@@ -19,9 +19,10 @@ namespace RTSSelector.Scripts.Runtime
         [SerializeField] private UnityEvent UnselectedEvent;
 
         //TEST
-        Vector3[] _boundsVertices = new Vector3[8];
+        //Vector3[] _boundsVertices = new Vector3[8];
         private Rect _rect;
         [SerializeField] private RectTransform _rectTransform;
+        [SerializeField] private Canvas _canvas;
         
         private void Awake()
         {
@@ -55,7 +56,7 @@ namespace RTSSelector.Scripts.Runtime
             // _boundsVertices[7] = new Vector3(vMin.x, vMax.y, vMax.z);
 
             _rect = GetScreenRect();
-            _rectTransform.anchoredPosition = _rect.center;
+            _rectTransform.position = _rect.center;
             _rectTransform.sizeDelta = new Vector2(Mathf.Abs(_rect.width), Mathf.Abs(_rect.height));
             //Debug.Log(_rect.size);
         }
@@ -111,7 +112,7 @@ namespace RTSSelector.Scripts.Runtime
                     if (points[i].y > Ymax) Ymax = points[i].y;
                 }
             }
-            
+
             return new Rect(Xmin, Ymin, Xmax - Xmin, Ymax - Ymin);
         }
 
@@ -127,10 +128,10 @@ namespace RTSSelector.Scripts.Runtime
 
         private void OnDrawGizmosSelected()
         {
-            foreach (Vector3 vertex in _boundsVertices)
-            {
-                Gizmos.DrawWireSphere(vertex, 0.5f);
-            }
+            // foreach (Vector3 vertex in _boundsVertices)
+            // {
+            //     Gizmos.DrawWireSphere(vertex, 0.5f);
+            // }
             
             Gizmos.DrawWireSphere(new Vector2(_rect.xMin, _rect.yMin), 0.5f);            
             Gizmos.DrawWireSphere(new Vector2(_rect.xMax, _rect.yMax), 0.5f);            

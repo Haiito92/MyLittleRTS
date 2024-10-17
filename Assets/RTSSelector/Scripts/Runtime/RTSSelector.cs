@@ -76,7 +76,7 @@ namespace RTSSelector.Scripts.Runtime
             _isSelecting = true;
             
             _mouseStartPos = mouseStartPos;
-            _selectorBox.anchoredPosition = _mouseStartPos;
+            _selectorBox.position = _mouseStartPos;
             
             _selectorBox.gameObject.SetActive(true);
             
@@ -93,7 +93,10 @@ namespace RTSSelector.Scripts.Runtime
             _isSelecting = false;
             OnSelectionEndEvent.Invoke();
             
-            _currentSelection = _allRtsSelectables.FindAll(rtsSelectable => RectTransformUtility.RectangleContainsScreenPoint(_selectorBox, rtsSelectable.GetScreenPos()));
+            //_currentSelection = _allRtsSelectables.FindAll(rtsSelectable => RectTransformUtility.RectangleContainsScreenPoint(_selectorBox, rtsSelectable.GetScreenPos()));
+            _currentSelection =
+                _allRtsSelectables.FindAll(rtsSelectable => _selectorBox.rect.Overlaps(rtsSelectable.GetScreenRect()));
+            Debug.Log(_currentSelection.Count);
             _currentSelection.ForEach(rtsSelectable => rtsSelectable.Select());
             
             _selectorBox.gameObject.SetActive(false);
@@ -108,7 +111,7 @@ namespace RTSSelector.Scripts.Runtime
             float width = _mouseEndPos.x - _mouseStartPos.x;
             float height = _mouseEndPos.y - _mouseStartPos.y;
 
-            _selectorBox.anchoredPosition = _mouseStartPos + new Vector2(width / 2, height / 2);
+            _selectorBox.position = _mouseStartPos + new Vector2(width / 2, height / 2);
             _selectorBox.sizeDelta = new Vector2(Mathf.Abs(width), Mathf.Abs(height));
         }
 
