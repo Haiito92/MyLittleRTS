@@ -20,7 +20,6 @@ namespace RTSSelector.Scripts.Runtime
 
         //TEST
         //Vector3[] _boundsVertices = new Vector3[8];
-        private Rect _rect;
         [SerializeField] private RectTransform _rectTransform;
         [SerializeField] private Canvas _canvas;
         
@@ -37,28 +36,9 @@ namespace RTSSelector.Scripts.Runtime
 
         private void Update()
         {
-            // //TEST
-            // if(_collider == null) return;
-            //
-            // Vector3 vMin = _collider.bounds.min;
-            // Vector3 vMax = _collider.bounds.max;
-            //
-            // //MinMax
-            // _boundsVertices[0] = vMin;
-            // _boundsVertices[6] = vMax;
-            // //Bottom
-            // _boundsVertices[1] = new Vector3(vMax.x, vMin.y, vMin.z);
-            // _boundsVertices[2] = new Vector3(vMax.x, vMin.y, vMax.z);
-            // _boundsVertices[3] = new Vector3(vMin.x, vMin.y, vMax.z);
-            // //Top
-            // _boundsVertices[4] = new Vector3(vMin.x, vMax.y, vMin.z);
-            // _boundsVertices[5] = new Vector3(vMax.x, vMax.y, vMin.z);
-            // _boundsVertices[7] = new Vector3(vMin.x, vMax.y, vMax.z);
-
-            _rect = GetScreenRect();
-            _rectTransform.position = _rect.center;
-            _rectTransform.sizeDelta = new Vector2(Mathf.Abs(_rect.width), Mathf.Abs(_rect.height));
-            //Debug.Log(_rect.size);
+            Rect rect = GetScreenRect();
+            _rectTransform.position = rect.center;
+            _rectTransform.sizeDelta = new Vector2(Mathf.Abs(rect.width * 1/_canvas.scaleFactor), Mathf.Abs(rect.height * 1/_canvas.scaleFactor));
         }
 
         public Vector2 GetScreenPos()
@@ -132,11 +112,6 @@ namespace RTSSelector.Scripts.Runtime
             // {
             //     Gizmos.DrawWireSphere(vertex, 0.5f);
             // }
-            
-            Gizmos.DrawWireSphere(new Vector2(_rect.xMin, _rect.yMin), 0.5f);            
-            Gizmos.DrawWireSphere(new Vector2(_rect.xMax, _rect.yMax), 0.5f);            
-            Gizmos.DrawWireSphere(new Vector2(_rect.xMin, _rect.yMax), 0.5f);            
-            Gizmos.DrawWireSphere(new Vector2(_rect.xMax, _rect.yMin), 0.5f);            
         }
     }
 }
