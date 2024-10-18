@@ -167,6 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _selectorBox: {fileID: 1067720551}
+  _canvas: {fileID: 825061580}
   OnSelectionStartEvent:
     m_PersistentCalls:
       m_Calls: []

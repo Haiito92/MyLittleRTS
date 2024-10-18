@@ -38,7 +38,7 @@ namespace RTSSelector.Scripts.Runtime
         {
             Rect rect = GetScreenRect();
             _rectTransform.position = rect.center;
-            _rectTransform.sizeDelta = new Vector2(Mathf.Abs(rect.width * 1/_canvas.scaleFactor), Mathf.Abs(rect.height * 1/_canvas.scaleFactor));
+            _rectTransform.sizeDelta = new Vector2(Mathf.Abs(rect.width), Mathf.Abs(rect.height));
         }
 
         public Vector2 GetScreenPos()
@@ -93,7 +93,7 @@ namespace RTSSelector.Scripts.Runtime
                 }
             }
 
-            return new Rect(Xmin, Ymin, Xmax - Xmin, Ymax - Ymin);
+            return new Rect(Xmin, Ymin, (Xmax - Xmin) * 1/_canvas.scaleFactor, (Ymax - Ymin)  * 1/_canvas.scaleFactor);
         }
 
         public void Select()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -15,13 +16,8 @@ namespace RTSSelector.Scripts.Runtime
         private Vector2 _mouseStartPos;
         private Vector2 _mouseEndPos;
         [SerializeField] private RectTransform _selectorBox;
+        [SerializeField] private Canvas _canvas;
         private bool _isSelecting = false;
-            
-        //Selector Mesh
-        // [SerializeField] private MeshFilter _selectorMeshFilter;
-        // private Mesh _selectorMesh;
-        // [SerializeField] private float _startDistanceFromCamera = 0.1f;
-        // [SerializeField] private float _endDistanceFromCamera = 50f;
         
         //Actions//
         public UnityAction OnSelectionStart;
@@ -93,9 +89,8 @@ namespace RTSSelector.Scripts.Runtime
             _isSelecting = false;
             OnSelectionEndEvent.Invoke();
             
-            //_currentSelection = _allRtsSelectables.FindAll(rtsSelectable => RectTransformUtility.RectangleContainsScreenPoint(_selectorBox, rtsSelectable.GetScreenPos()));
             _currentSelection =
-                _allRtsSelectables.FindAll(rtsSelectable => _selectorBox.rect.Overlaps(rtsSelectable.GetScreenRect()));
+                _allRtsSelectables.FindAll(rtsSelectable => _selectorBox.rect.Overlaps(rtsSelectable.GetScreenRect(),true));
             Debug.Log(_currentSelection.Count);
             _currentSelection.ForEach(rtsSelectable => rtsSelectable.Select());
             
@@ -115,56 +110,9 @@ namespace RTSSelector.Scripts.Runtime
             _selectorBox.sizeDelta = new Vector2(Mathf.Abs(width), Mathf.Abs(height));
         }
 
-        // private void UpdateSelectorMesh()
-        // {
-        //     Vector3[] corners = new Vector3[4];
-        //     _selectorBox.GetWorldCorners(corners);
-        //     
-        //
-        //     Ray[] rays = new Ray[4];
-        //
-        //     for (int i = 0; i < corners.Length; i++)
-        //     {
-        //         rays[i] = Camera.main.ScreenPointToRay(corners[i]);
-        //     }
-        //
-        //     Vector3[] frontPoints = new Vector3[4];
-        //     Vector3[] backPoints = new Vector3[4];
-        //
-        //     for (int i = 0; i < rays.Length; i++)
-        //     {
-        //         frontPoints[i] = rays[i].origin + rays[i].direction * _startDistanceFromCamera;
-        //     }
-        //     
-        //     for (int i = 0; i < rays.Length; i++)
-        //     {
-        //         backPoints[i] = rays[i].origin + rays[i].direction * _endDistanceFromCamera;
-        //     }
-        //     
-        //     Vector3[] newVertices = new Vector3[]
-        //     {
-        //         //Front
-        //         frontPoints[0], frontPoints[1], frontPoints[2], frontPoints[3],
-        //         
-        //         //Right
-        //         frontPoints[3], backPoints[3], backPoints[2], frontPoints[2],
-        //         
-        //         //Top
-        //         frontPoints[2], backPoints[2], backPoints[1], frontPoints[1],
-        //         
-        //         //Left
-        //         frontPoints[1], backPoints[1], backPoints[0], frontPoints[0],
-        //         
-        //         //Bottom
-        //         frontPoints[0], frontPoints[3], backPoints[3], backPoints[0],
-        //         
-        //         //Back
-        //         backPoints[0], backPoints[1], backPoints[2], backPoints[3]
-        //     };
-        //
-        //     _selectorMesh = _selectorMeshFilter.mesh;
-        //     _selectorMesh.SetVertices(newVertices);
-        //     _selectorMesh.RecalculateBounds();
-        // }
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawWireSphere(Camera.main.ScreenToWorldPoint(_selectorBox.rect.center), 0.5f);
+        }
     }
 }
