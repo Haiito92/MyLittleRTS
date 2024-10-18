@@ -42,6 +42,7 @@ namespace RTSSelector.Scripts.Runtime
         
         private void Awake()
         {
+            #region Setup Singleton
             //Setup Singleton
             if (_instance != null && _instance != this)
             {
@@ -51,6 +52,7 @@ namespace RTSSelector.Scripts.Runtime
             {
                 _instance = this;
             }
+            #endregion
             
             //Setup Lists
             _allRtsSelectables = new List<RTSSelectable>();
@@ -71,8 +73,10 @@ namespace RTSSelector.Scripts.Runtime
             
             _isSelecting = true;
             
-            _mouseStartPos = mouseStartPos;
-            _selectorBox.position = _mouseStartPos;
+            _mouseStartPos = mouseStartPos * 1/_canvas.scaleFactor;
+            
+            _selectorBox.anchoredPosition = _mouseStartPos;
+            _selectorBox.sizeDelta = new Vector2(0f, 0f);
             
             _selectorBox.gameObject.SetActive(true);
             
@@ -88,10 +92,28 @@ namespace RTSSelector.Scripts.Runtime
         {
             _isSelecting = false;
             OnSelectionEndEvent.Invoke();
-            
-            _currentSelection =
-                _allRtsSelectables.FindAll(rtsSelectable => _selectorBox.rect.Overlaps(rtsSelectable.GetScreenRect(),true));
-            Debug.Log(_currentSelection.Count);
+
+            Vector3[] corners = new Vector3[4];
+            _selectorBox.GetWorldCorners(corners);
+
+            Vector2 selectorMin = corners[0];
+            Vector2 selectorMax = corners[2];
+
+            foreach (RTSSelectable rtsSelectable in _allRtsSelectables)
+            {
+                Vector3[] selectableCorners = new Vector3[4];
+                rtsSelectable.RectTransform.GetWorldCorners(selectableCorners);
+                Vector2 selectableMin = selectableCorners[0];
+                Vector2 selectableMax = selectableCorners[2];
+
+                if (selectorMin.x < selectableMax.x &&
+                    selectorMax.x > selectableMin.x &&
+                    selectorMin.y < selectableMax.y &&
+                    selectorMax.y > selectableMin.y)
+                {
+                    _currentSelection.Add(rtsSelectable);
+                }
+            }
             _currentSelection.ForEach(rtsSelectable => rtsSelectable.Select());
             
             _selectorBox.gameObject.SetActive(false);
@@ -101,18 +123,19 @@ namespace RTSSelector.Scripts.Runtime
 
         private void UpdateSelectorBox(Vector2 mouseCurrentPos)
         {
-            _mouseEndPos = mouseCurrentPos;
+            _mouseEndPos = mouseCurrentPos * 1/_canvas.scaleFactor;
 
             float width = _mouseEndPos.x - _mouseStartPos.x;
             float height = _mouseEndPos.y - _mouseStartPos.y;
-
-            _selectorBox.position = _mouseStartPos + new Vector2(width / 2, height / 2);
+            
+            _selectorBox.anchoredPosition = _mouseStartPos + new Vector2(width / 2, height / 2);
             _selectorBox.sizeDelta = new Vector2(Mathf.Abs(width), Mathf.Abs(height));
+
         }
 
         private void OnDrawGizmos()
         {
-            Gizmos.DrawWireSphere(Camera.main.ScreenToWorldPoint(_selectorBox.rect.center), 0.5f);
+            // Gizmos.DrawWireSphere(Camera.main.ScreenToWorldPoint(_selectorBox.rect.center), 0.5f);
         }
     }
 }

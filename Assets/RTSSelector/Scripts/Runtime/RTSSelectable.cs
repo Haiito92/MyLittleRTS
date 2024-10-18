@@ -19,9 +19,10 @@ namespace RTSSelector.Scripts.Runtime
         [SerializeField] private UnityEvent UnselectedEvent;
 
         //TEST
-        //Vector3[] _boundsVertices = new Vector3[8];
+        Vector3[] _boundsVertices = new Vector3[8];
         [SerializeField] private RectTransform _rectTransform;
         [SerializeField] private Canvas _canvas;
+        public RectTransform RectTransform => _rectTransform;
         
         private void Awake()
         {
@@ -37,8 +38,8 @@ namespace RTSSelector.Scripts.Runtime
         private void Update()
         {
             Rect rect = GetScreenRect();
-            _rectTransform.position = rect.center;
-            _rectTransform.sizeDelta = new Vector2(Mathf.Abs(rect.width), Mathf.Abs(rect.height));
+            _rectTransform.anchoredPosition = rect.center ;
+            _rectTransform.sizeDelta = new Vector2(rect.width, rect.height);
         }
 
         public Vector2 GetScreenPos()
@@ -70,7 +71,7 @@ namespace RTSSelector.Scripts.Runtime
             Vector2[] points = new Vector2[8];
             for (int i = 0; i < boundsVertices.Length; i++)
             {
-                points[i] = Camera.main.WorldToScreenPoint(boundsVertices[i]);
+                points[i] = Camera.main.WorldToScreenPoint(boundsVertices[i]) * 1/_canvas.scaleFactor;
             }
 
             float Xmin = 0, Xmax = 0, Ymin = 0, Ymax = 0;
@@ -93,7 +94,8 @@ namespace RTSSelector.Scripts.Runtime
                 }
             }
 
-            return new Rect(Xmin, Ymin, (Xmax - Xmin) * 1/_canvas.scaleFactor, (Ymax - Ymin)  * 1/_canvas.scaleFactor);
+            Rect screenRect = new Rect(Xmin, Ymin, (Xmax - Xmin), (Ymax - Ymin));
+            return screenRect;
         }
 
         public void Select()
@@ -108,10 +110,10 @@ namespace RTSSelector.Scripts.Runtime
 
         private void OnDrawGizmosSelected()
         {
-            // foreach (Vector3 vertex in _boundsVertices)
-            // {
-            //     Gizmos.DrawWireSphere(vertex, 0.5f);
-            // }
+            foreach (Vector3 vertex in _boundsVertices)
+            {
+                Gizmos.DrawWireSphere(vertex, 0.5f);
+            }
         }
     }
 }
