@@ -93,9 +93,17 @@ namespace RTSSelector.Scripts.Runtime
             _isSelecting = false;
             OnSelectionEndEvent.Invoke();
 
+            Vector3[] corners = new Vector3[4];
+            _selectorBox.GetWorldCorners(corners);
+            Vector2 selectorMin = corners[0]  * 1/_canvas.scaleFactor;
+
+            RTSScreenRect selectorRect =
+                new RTSScreenRect(selectorMin, _selectorBox.rect.width, _selectorBox.rect.height);
+            
             foreach (RTSSelectable rtsSelectable in _allRtsSelectables)
             {
-                if (SelectorBoxOverlaps(rtsSelectable.RectTransform)) _currentSelection.Add(rtsSelectable);
+                RTSScreenRect selectableRect = rtsSelectable.GetScreenRect();
+                if (selectorRect.Overlaps(selectableRect)) _currentSelection.Add(rtsSelectable);
             }
             _currentSelection.ForEach(rtsSelectable => rtsSelectable.Select());
             
