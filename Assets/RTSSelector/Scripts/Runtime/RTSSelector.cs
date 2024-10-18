@@ -93,26 +93,9 @@ namespace RTSSelector.Scripts.Runtime
             _isSelecting = false;
             OnSelectionEndEvent.Invoke();
 
-            Vector3[] corners = new Vector3[4];
-            _selectorBox.GetWorldCorners(corners);
-
-            Vector2 selectorMin = corners[0];
-            Vector2 selectorMax = corners[2];
-
             foreach (RTSSelectable rtsSelectable in _allRtsSelectables)
             {
-                Vector3[] selectableCorners = new Vector3[4];
-                rtsSelectable.RectTransform.GetWorldCorners(selectableCorners);
-                Vector2 selectableMin = selectableCorners[0];
-                Vector2 selectableMax = selectableCorners[2];
-
-                if (selectorMin.x < selectableMax.x &&
-                    selectorMax.x > selectableMin.x &&
-                    selectorMin.y < selectableMax.y &&
-                    selectorMax.y > selectableMin.y)
-                {
-                    _currentSelection.Add(rtsSelectable);
-                }
+                if (SelectorBoxOverlaps(rtsSelectable.RectTransform)) _currentSelection.Add(rtsSelectable);
             }
             _currentSelection.ForEach(rtsSelectable => rtsSelectable.Select());
             
@@ -133,9 +116,48 @@ namespace RTSSelector.Scripts.Runtime
 
         }
 
+        private bool SelectorBoxOverlaps(RectTransform other)
+        {
+            Vector3[] corners = new Vector3[4];
+            _selectorBox.GetWorldCorners(corners);
+            Vector2 selectorMin = corners[0];
+            Vector2 selectorMax = corners[2];
+            
+            Vector3[] selectableCorners = new Vector3[4];
+            other.GetWorldCorners(selectableCorners);
+            Vector2 selectableMin = selectableCorners[0];
+            Vector2 selectableMax = selectableCorners[2];
+
+            return selectorMin.x < selectableMax.x &&
+                   selectorMax.x > selectableMin.x &&
+                   selectorMin.y < selectableMax.y &&
+                   selectorMax.y > selectableMin.y;
+        }
+        
         private void OnDrawGizmos()
         {
             // Gizmos.DrawWireSphere(Camera.main.ScreenToWorldPoint(_selectorBox.rect.center), 0.5f);
+        }
+    }
+
+    static class RectTransformUtility
+    {
+        public static bool Overlaps(this RectTransform rectTransform, RectTransform other)
+        {
+            Vector3[] corners = new Vector3[4];
+            rectTransform.GetWorldCorners(corners);
+            Vector2 selectorMin = corners[0];
+            Vector2 selectorMax = corners[2];
+            
+            Vector3[] selectableCorners = new Vector3[4];
+            other.GetWorldCorners(selectableCorners);
+            Vector2 selectableMin = selectableCorners[0];
+            Vector2 selectableMax = selectableCorners[2];
+
+            return selectorMin.x < selectableMax.x &&
+                   selectorMax.x > selectableMin.x &&
+                   selectorMin.y < selectableMax.y &&
+                   selectorMax.y > selectableMin.y;
         }
     }
 }
