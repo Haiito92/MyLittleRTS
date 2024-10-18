@@ -17,9 +17,9 @@ namespace RTSSelector.Scripts.Runtime
         [SerializeField] private UnityEvent UnselectedEvent;
 
         //TEST
-        [SerializeField] private RectTransform _rectTransform;
-        [SerializeField] private Canvas _canvas;
-        public RectTransform RectTransform => _rectTransform;
+        // [SerializeField] private RectTransform _rectTransform;
+        // [SerializeField] private Canvas _canvas;
+        // public RectTransform RectTransform => _rectTransform;
         
         private void Awake()
         {
@@ -34,16 +34,11 @@ namespace RTSSelector.Scripts.Runtime
 
         private void Update()
         {
-            RTSScreenRect rect = GetScreenRect();
-            _rectTransform.anchoredPosition = rect.Center ;
-            _rectTransform.sizeDelta = new Vector2(rect.Width, rect.Height);
+            //TEST
+            // RTSScreenRect rect = GetScreenRect();
+            // _rectTransform.anchoredPosition = rect.Center ;
+            // _rectTransform.sizeDelta = new Vector2(rect.Width, rect.Height);
         }
-
-        public Vector2 GetScreenPos()
-        {
-            return Camera.main.WorldToScreenPoint(transform.position);
-        }
-
 
         public RTSScreenRect GetScreenRect()
         {
@@ -68,8 +63,8 @@ namespace RTSSelector.Scripts.Runtime
             Vector2[] points = new Vector2[8];
             for (int i = 0; i < boundsVertices.Length; i++)
             {
-                points[i] = Camera.main.WorldToScreenPoint(boundsVertices[i]) * 1/_canvas.scaleFactor;
-                // points[i] = Camera.main.WorldToScreenPoint(boundsVertices[i]);
+                // points[i] = Camera.main.WorldToScreenPoint(boundsVertices[i]) * 1/_canvas.scaleFactor;
+                points[i] = Camera.main.WorldToScreenPoint(boundsVertices[i]);
             }
 
             float Xmin = 0, Xmax = 0, Ymin = 0, Ymax = 0;
@@ -93,8 +88,6 @@ namespace RTSSelector.Scripts.Runtime
             }
 
             RTSScreenRect rect = new RTSScreenRect(Xmin, Ymin, (Xmax - Xmin), (Ymax - Ymin));
-            
-            //Rect screenRect = new Rect(Xmin, Ymin, (Xmax - Xmin), (Ymax - Ymin));
             return rect;
         }
 
@@ -109,43 +102,5 @@ namespace RTSSelector.Scripts.Runtime
         }
     }
 
-    public struct RTSScreenRect
-    {
-        public Vector2 Min;
-        public Vector2 Max;
-        public Vector2 Center;
-        
-        public float Width;
-        public float Height;
-
-        public RTSScreenRect(Vector2 min, float width, float height)
-        {
-            Width = Mathf.Abs(width);
-            Height = Mathf.Abs(height);
-            
-            Min = min;
-            Max = new Vector2(min.x + Width, min.y + Height);
-            Center = new Vector2(min.x + Width/2f, min.y + Height/2f);
-
-        }
-        
-        public RTSScreenRect(float xMin, float yMin, float width, float height)
-        {
-            Width = Mathf.Abs(width);
-            Height = Mathf.Abs(height);
-            
-            Min = new Vector2(xMin, yMin);
-            Max = new Vector2(xMin + Width, yMin + Height);
-            Center = new Vector2(xMin + Width/2f, yMin + Height/2f);
-
-        }
-
-        public bool Overlaps(RTSScreenRect other)
-        {
-            return Min.x < other.Max.x &&
-                   Max.x > other.Min.x &&
-                   Min.y < other.Max.y &&
-                   Max.y > other.Min.y;
-        }
-    }
+    
 }

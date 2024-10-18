@@ -4,7 +4,7 @@ namespace RTSSelector.Scripts.Runtime
 {
     public interface IRTSSelectable
     {
-        Vector2 GetScreenPos();
+        RTSScreenRect GetScreenRect();
         void Select();
         void Unselect();
     }
