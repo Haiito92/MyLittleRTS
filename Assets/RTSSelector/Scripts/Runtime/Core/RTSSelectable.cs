@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace RTSSelector.Scripts.Runtime
+namespace RTSSelector.Scripts.Runtime.Core
 {
     public class RTSSelectable : MonoBehaviour, IRTSSelectable
     {
@@ -29,7 +29,7 @@ namespace RTSSelector.Scripts.Runtime
 
         private void Start()
         {
-            RTSSelector.Instance.AllRtsSelectables.Add(this);
+            Core.RTSSelector.Instance.AllRtsSelectables.Add(this);
         }
 
         private void Update()

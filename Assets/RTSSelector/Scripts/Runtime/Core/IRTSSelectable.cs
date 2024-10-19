@@ -1,6 +1,4 @@
-using UnityEngine;
-
-namespace RTSSelector.Scripts.Runtime
+namespace RTSSelector.Scripts.Runtime.Core
 {
     public interface IRTSSelectable
     {
