@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 namespace _Project.Runtime.Scripts.Core
 {
     
-    using RTSSelector.Scripts.Runtime;
+    using RTSSelector.Scripts.Runtime.Core;
     public class PlayerController : MonoBehaviour
     {
         //Inputs
@@ -12,11 +12,11 @@ namespace _Project.Runtime.Scripts.Core
         [SerializeField] private InputActionReference _mouseMove;
 
         //Selection
-        private RTSSelector.Scripts.Runtime.Core.RTSSelector _rtsSelector;
+        private RTSSelector _rtsSelector;
         
         private void Start()
         {
-            _rtsSelector = RTSSelector.Scripts.Runtime.Core.RTSSelector.Instance;
+            _rtsSelector = RTSSelector.Instance;
         }
     
         private void OnSelectInputActionEvent(InputAction.CallbackContext ctx)
@@ -39,7 +39,8 @@ namespace _Project.Runtime.Scripts.Core
                 if(_rtsSelector.IsSelecting)_rtsSelector.UpdateSelection(ctx.ReadValue<Vector2>());
             }
         }
-    
+
+        #region OnEnable/OnDisable
         private void OnEnable()
         {
             if(_select != null)
@@ -67,5 +68,6 @@ namespace _Project.Runtime.Scripts.Core
                 _mouseMove.action.performed -= OnMouseMoveInputActionEvent;
             }
         }
+        #endregion
     }
 }
