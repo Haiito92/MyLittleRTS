@@ -9,11 +9,17 @@ namespace RTSSelector.Scripts.Runtime.Core
         [SerializeField] private Collider _collider;
     
         //Actions
+        public event UnityAction PreSelected;
         public event UnityAction Selected;
+
+        public event UnityAction PreUnselected;
         public event UnityAction Unselected;
     
         //Event
+        [SerializeField] private UnityEvent PreSelectedEvent;
         [SerializeField] private UnityEvent SelectedEvent;
+
+        [SerializeField] private UnityEvent PreUnselectedEvent;
         [SerializeField] private UnityEvent UnselectedEvent;
 
         //TEST
@@ -23,7 +29,10 @@ namespace RTSSelector.Scripts.Runtime.Core
         
         private void Awake()
         {
+            PreUnselectedEvent.AddListener(() => PreSelected?.Invoke());
             SelectedEvent.AddListener(() => Selected?.Invoke());
+            
+            PreUnselectedEvent.AddListener(() => PreUnselected?.Invoke());
             UnselectedEvent.AddListener(() => Unselected?.Invoke());
         }
 
@@ -91,9 +100,19 @@ namespace RTSSelector.Scripts.Runtime.Core
             return rect;
         }
 
+        public void PreSelect()
+        {
+            PreSelectedEvent.Invoke();
+        }
+
         public void Select()
         {
             SelectedEvent.Invoke();
+        }
+
+        public void PreUnselect()
+        {
+            PreUnselectedEvent.Invoke();
         }
 
         public void Unselect()

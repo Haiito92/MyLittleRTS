@@ -88,6 +88,7 @@ namespace RTSSelector.Scripts.Runtime.Core
         public void UpdateSelection(Vector2 currentMousePos)
         {
             UpdateSelectorRect(currentMousePos);
+            UpdatePreselection();
             SelectionUpdatedEvent.Invoke();
         }
         
@@ -127,6 +128,16 @@ namespace RTSSelector.Scripts.Runtime.Core
             _selectorRect = new RTSScreenRect(XMin, YMin, width, height);
 
             return _selectorRect;
+        }
+
+        private void UpdatePreselection()
+        {
+            foreach (RTSSelectable rtsSelectable in _allRtsSelectables)
+            {
+                RTSScreenRect selectableRect = rtsSelectable.GetScreenRect();
+                if (_selectorRect.Overlaps(selectableRect)) rtsSelectable.PreSelect();
+                else rtsSelectable.PreUnselect();
+            }
         }
     }
 }
