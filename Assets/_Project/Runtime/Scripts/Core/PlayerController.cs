@@ -36,7 +36,7 @@ namespace _Project.Runtime.Scripts.Core
         {
             if(ctx.performed)
             {
-                if(_rtsSelector.IsSelecting)_rtsSelector.UpdateSelection(ctx.ReadValue<Vector2>());
+                if(_rtsSelector.IsSelecting) _rtsSelector.UpdatePreselection(ctx.ReadValue<Vector2>());
             }
         }
 

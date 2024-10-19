@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,7 +11,7 @@ namespace RTSSelector.Scripts.Runtime.Core
         //Fields//
         //Selectables
         private List<RTSSelectable> _allRtsSelectables;
-        private List<RTSSelectable> _currentSelection;
+        //private List<RTSSelectable> _currentSelection;
         
         //Selector Box
         private Vector2 _mouseStartPos;
@@ -58,7 +59,7 @@ namespace RTSSelector.Scripts.Runtime.Core
             
             //Setup Lists
             _allRtsSelectables = new List<RTSSelectable>();
-            _currentSelection = new List<RTSSelectable>();
+            //_currentSelection = new List<RTSSelectable>();
             
             //Subscribe UnityActions Invoke to their corresponding UnityEvent
             SelectionStartedEvent.AddListener(() => SelectionStarted?.Invoke());
@@ -69,11 +70,11 @@ namespace RTSSelector.Scripts.Runtime.Core
         #region Selection
         public void StartSelection(Vector2 mouseStartPos)
         {
-            if (_currentSelection != null)
-            {
-                _currentSelection.ForEach(rtsSelectable => rtsSelectable.Unselect());
-                _currentSelection.Clear();
-            }
+            // if (_currentSelection != null)
+            // {
+            //     _currentSelection.ForEach(rtsSelectable => rtsSelectable.Unselect());
+            //     _currentSelection.Clear();
+            // }
             
             _isSelecting = true;
             
@@ -85,30 +86,57 @@ namespace RTSSelector.Scripts.Runtime.Core
             SelectionStartedEvent.Invoke();
         }
 
-        public void UpdateSelection(Vector2 currentMousePos)
+        [Obsolete("Deprecated" ,true)]
+        public void UpdateSelection(Vector2 currentMousePos) // Deprecated
         {
             UpdateSelectorRect(currentMousePos);
-            UpdatePreselection();
+            UpdatePreselection(currentMousePos);
             SelectionUpdatedEvent.Invoke();
+        }
+        
+        public List<RTSSelectable> UpdatePreselection(Vector2 currentMousePos)
+        {
+            UpdateSelectorRect(currentMousePos);
+
+            List<RTSSelectable> preSelection = new List<RTSSelectable>();
+            
+            foreach (RTSSelectable rtsSelectable in _allRtsSelectables)
+            {
+                RTSScreenRect selectableRect = rtsSelectable.GetScreenRect();
+                if (_selectorRect.Overlaps(selectableRect))
+                {
+                    rtsSelectable.PreSelect();
+                    preSelection.Add(rtsSelectable);
+                }
+                else if(preSelection.Contains(rtsSelectable))
+                {
+                    rtsSelectable.PreUnselect();
+                    preSelection.Remove(rtsSelectable);
+                }
+            }
+
+            return preSelection;
         }
         
         public List<RTSSelectable> FinishSelection()
         {
             _isSelecting = false;
+
+            List<RTSSelectable> selection = new List<RTSSelectable>();
             
             //iterate to see which selectable are in rectangle
             foreach (RTSSelectable rtsSelectable in _allRtsSelectables)
             {
                 RTSScreenRect selectableRect = rtsSelectable.GetScreenRect();
-                if (_selectorRect.Overlaps(selectableRect)) _currentSelection.Add(rtsSelectable);
+                if (_selectorRect.Overlaps(selectableRect)) selection.Add(rtsSelectable);
             }
             
-            //Select all selectable in currentSelection
-            _currentSelection.ForEach(rtsSelectable => rtsSelectable.Select());
+            //Select all selectable in selection
+            selection.ForEach(rtsSelectable => rtsSelectable.Select());
             
             SelectionEndedEvent.Invoke();
             
-            return _currentSelection;
+            return selection;
         }
         #endregion
         
@@ -130,14 +158,6 @@ namespace RTSSelector.Scripts.Runtime.Core
             return _selectorRect;
         }
 
-        private void UpdatePreselection()
-        {
-            foreach (RTSSelectable rtsSelectable in _allRtsSelectables)
-            {
-                RTSScreenRect selectableRect = rtsSelectable.GetScreenRect();
-                if (_selectorRect.Overlaps(selectableRect)) rtsSelectable.PreSelect();
-                else rtsSelectable.PreUnselect();
-            }
-        }
+        
     }
 }
