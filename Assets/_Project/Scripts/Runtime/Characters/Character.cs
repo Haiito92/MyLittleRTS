@@ -1,10 +1,9 @@
-using System;
-using RTSSelector.Scripts.Runtime;
-using RTSSelector.Scripts.Runtime.Core;
 using UnityEngine;
 
-namespace _Project.Runtime.Scripts.Characters
+namespace _Project.Scripts.Runtime.Characters
 {
+    using RTSSelector.Scripts.Runtime.Core;
+    
     public class Character : MonoBehaviour
     {
         [SerializeField] private RTSSelectable _rtsSelectable;

@@ -1,10 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace _Project.Runtime.Scripts.Core
+namespace _Project.Scripts.Runtime.Core
 {
-    
-    using RTSSelector.Scripts.Runtime.Core;
     public class PlayerController : MonoBehaviour
     {
         //Inputs
@@ -12,11 +10,11 @@ namespace _Project.Runtime.Scripts.Core
         [SerializeField] private InputActionReference _mouseMove;
 
         //Selection
-        private RTSSelector _rtsSelector;
+        private RTSSelector.Scripts.Runtime.Core.RTSSelector _rtsSelector;
         
         private void Start()
         {
-            _rtsSelector = RTSSelector.Instance;
+            _rtsSelector = RTSSelector.Scripts.Runtime.Core.RTSSelector.Instance;
         }
     
         private void OnSelectInputActionEvent(InputAction.CallbackContext ctx)
