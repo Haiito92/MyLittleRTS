@@ -106,16 +106,16 @@ namespace RTSSelector.Scripts.Runtime.Core
                 if (_selectorRect.Overlaps(selectableRect))
                 {
                     rtsSelectable.PreSelect();
-                    preSelection.Add(rtsSelectable);
                 }
-                else if(preSelection.Contains(rtsSelectable))
+                else 
                 {
                     rtsSelectable.PreUnselect();
-                    preSelection.Remove(rtsSelectable);
                 }
             }
+            
+            SelectionUpdatedEvent.Invoke();
 
-            return preSelection;
+            return null;
         }
         
         public List<RTSSelectable> FinishSelection()
