@@ -124,6 +124,10 @@ namespace RTSSelector.Scripts.Runtime.Core
             _isSelecting = false;
 
             List<RTSSelectable> selection = new List<RTSSelectable>();
+
+            if (_mouseStartPos == _mouseEndPos)
+            {
+            }
             
             //iterate to see which selectable are in rectangle
             foreach (RTSSelectable rtsSelectable in _allRtsSelectables)
