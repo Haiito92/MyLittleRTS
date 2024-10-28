@@ -38,8 +38,9 @@ namespace _Project.Scripts.Runtime.Core
             if(ctx.canceled)
             {
                 _selection.ForEach(rtsSelectable => rtsSelectable.Unselect());
+                _selection.Clear();
                 
-                List<RTSSelectable> newSelection = _rtsSelector.FinishSelection();
+                List<RTSSelectable> newSelection = _rtsSelector.FinishSelection(_mouseMove.action.ReadValue<Vector2>());
 
                 foreach (RTSSelectable rtsSelectable in newSelection)
                 {

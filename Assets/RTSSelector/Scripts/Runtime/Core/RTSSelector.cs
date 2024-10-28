@@ -81,7 +81,7 @@ namespace RTSSelector.Scripts.Runtime.Core
             // _mouseStartPos = mouseStartPos * 1/_canvas.scaleFactor;
             _mouseStartPos = mouseStartPos;
 
-            _selectorRect = new RTSScreenRect(_mouseStartPos.x, _mouseEndPos.y, 0f, 0f);
+            _selectorRect = new RTSScreenRect(_mouseStartPos.x, _mouseStartPos.y, 0f, 0f);
             
             SelectionStartedEvent.Invoke();
         }
@@ -119,15 +119,12 @@ namespace RTSSelector.Scripts.Runtime.Core
             return preSelection;
         }
         
-        public List<RTSSelectable> FinishSelection()
+        public List<RTSSelectable> FinishSelection(Vector2 mouseEndPos)
         {
             _isSelecting = false;
-
+            UpdateSelectorRect(mouseEndPos);
+            
             List<RTSSelectable> selection = new List<RTSSelectable>();
-
-            if (_mouseStartPos == _mouseEndPos)
-            {
-            }
             
             //iterate to see which selectable are in rectangle
             foreach (RTSSelectable rtsSelectable in _allRtsSelectables)
