@@ -103,19 +103,20 @@ namespace RTSSelector.Scripts.Runtime.Core
             foreach (RTSSelectable rtsSelectable in _allRtsSelectables)
             {
                 RTSScreenRect selectableRect = rtsSelectable.GetScreenRect();
-                if (_selectorRect.Overlaps(selectableRect))
+                if (_selectorRect.Overlaps(selectableRect) && !preSelection.Contains(rtsSelectable))
                 {
-                    rtsSelectable.PreSelect();
+                    preSelection.Add(rtsSelectable);
+                    continue;
                 }
-                else 
+                if(!_selectorRect.Overlaps(selectableRect) && preSelection.Contains(rtsSelectable))
                 {
-                    rtsSelectable.PreUnselect();
+                    preSelection.Remove(rtsSelectable);
                 }
             }
             
             SelectionUpdatedEvent.Invoke();
 
-            return null;
+            return preSelection;
         }
         
         public List<RTSSelectable> FinishSelection()
@@ -130,9 +131,6 @@ namespace RTSSelector.Scripts.Runtime.Core
                 RTSScreenRect selectableRect = rtsSelectable.GetScreenRect();
                 if (_selectorRect.Overlaps(selectableRect)) selection.Add(rtsSelectable);
             }
-            
-            //Select all selectable in selection
-            selection.ForEach(rtsSelectable => rtsSelectable.Select());
             
             SelectionEndedEvent.Invoke();
             

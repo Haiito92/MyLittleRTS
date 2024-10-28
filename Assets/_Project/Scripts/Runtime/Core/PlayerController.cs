@@ -1,8 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using _Project.Scripts.Runtime.Units.Characters;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace _Project.Scripts.Runtime.Core
 {
+    using RTSSelector.Scripts.Runtime.Core;
     public class PlayerController : MonoBehaviour
     {
         //Inputs
@@ -10,11 +15,17 @@ namespace _Project.Scripts.Runtime.Core
         [SerializeField] private InputActionReference _mouseMove;
 
         //Selection
-        private RTSSelector.Scripts.Runtime.Core.RTSSelector _rtsSelector;
-        
+        private RTSSelector _rtsSelector;
+        private List<RTSSelectable> _selection;
+
+        private void Awake()
+        {
+            _selection = new List<RTSSelectable>();
+        }
+
         private void Start()
         {
-            _rtsSelector = RTSSelector.Scripts.Runtime.Core.RTSSelector.Instance;
+            _rtsSelector = RTSSelector.Instance;
         }
     
         private void OnSelectInputActionEvent(InputAction.CallbackContext ctx)
@@ -26,7 +37,18 @@ namespace _Project.Scripts.Runtime.Core
             
             if(ctx.canceled)
             {
-                _rtsSelector.FinishSelection();
+                _selection.ForEach(rtsSelectable => rtsSelectable.Unselect());
+                
+                List<RTSSelectable> newSelection = _rtsSelector.FinishSelection();
+
+                foreach (RTSSelectable rtsSelectable in newSelection)
+                {
+                    if(!rtsSelectable.TryGetComponent(out CharacterUnit characterUnit)) continue;
+                    
+                    _selection.Add(rtsSelectable);
+                }
+                
+                _selection.ForEach(rtsSelectable => rtsSelectable.Select());
             }
         }
 
@@ -34,7 +56,7 @@ namespace _Project.Scripts.Runtime.Core
         {
             if(ctx.performed)
             {
-                if(_rtsSelector.IsSelecting) _rtsSelector.UpdatePreselection(ctx.ReadValue<Vector2>());
+                if(_rtsSelector.IsSelecting)_rtsSelector.UpdatePreselection(ctx.ReadValue<Vector2>());
             }
         }
 
