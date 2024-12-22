@@ -86,14 +86,6 @@ namespace RTSSelector.Scripts.Runtime.Core
             SelectionStartedEvent.Invoke();
         }
 
-        [Obsolete("Deprecated" ,true)]
-        public void UpdateSelection(Vector2 currentMousePos) // Deprecated
-        {
-            UpdateSelectorRect(currentMousePos);
-            UpdatePreselection(currentMousePos);
-            SelectionUpdatedEvent.Invoke();
-        }
-        
         public List<RTSSelectable> UpdatePreselection(Vector2 currentMousePos)
         {
             UpdateSelectorRect(currentMousePos);
