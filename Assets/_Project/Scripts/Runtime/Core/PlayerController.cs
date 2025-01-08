@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Runtime.Units.Characters;
+using RTSSelector.Scripts.OOP.Runtime.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace _Project.Scripts.Runtime.Core
 {
-    using RTSSelector.Scripts.Runtime.Core;
     public class PlayerController : MonoBehaviour
     {
         //Inputs
@@ -15,7 +15,7 @@ namespace _Project.Scripts.Runtime.Core
         [SerializeField] private InputActionReference _mouseMove;
 
         //Selection
-        private RTSSelector _rtsSelector;
+        private RTSSelector.Scripts.OOP.Runtime.Core.RTSSelector _rtsSelector;
         private List<RTSSelectable> _selection;
 
         private void Awake()
@@ -25,7 +25,7 @@ namespace _Project.Scripts.Runtime.Core
 
         private void Start()
         {
-            _rtsSelector = RTSSelector.Instance;
+            _rtsSelector = RTSSelector.Scripts.OOP.Runtime.Core.RTSSelector.Instance;
         }
     
         private void OnSelectInputActionEvent(InputAction.CallbackContext ctx)

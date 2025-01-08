@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RTSSelector.Scripts.Runtime.Core
+namespace RTSSelector.Scripts.OOP.Runtime.Core
 {
     public struct RTSScreenRect
     {
