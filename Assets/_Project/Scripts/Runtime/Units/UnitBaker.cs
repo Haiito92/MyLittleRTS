@@ -1,5 +1,5 @@
 using _Project.Scripts.Runtime.Health;
-using RTSSelector.Scripts.Runtime.ECS.Core;
+using RTSSelector.Scripts.Runtime.ECS.Components;
 using Unity.Transforms;
 using UnityEngine;
 

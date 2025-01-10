@@ -1,8 +1,9 @@
 using RTSSelector.Scripts.Runtime.Core;
+using RTSSelector.Scripts.Runtime.ECS.Components;
 using Unity.Entities;
 using UnityEngine;
 
-namespace RTSSelector.Scripts.Runtime.ECS.Core
+namespace RTSSelector.Scripts.Runtime.ECS.Systems
 {
     partial struct RTSSelectableSystem : ISystem
     {
