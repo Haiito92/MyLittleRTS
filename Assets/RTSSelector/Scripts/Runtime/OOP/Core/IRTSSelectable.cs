@@ -1,4 +1,6 @@
-namespace RTSSelector.Scripts.OOP.Runtime.Core
+using RTSSelector.Scripts.Runtime.Core;
+
+namespace RTSSelector.Scripts.Runtime.OOP.Core
 {
     public interface IRTSSelectable
     {

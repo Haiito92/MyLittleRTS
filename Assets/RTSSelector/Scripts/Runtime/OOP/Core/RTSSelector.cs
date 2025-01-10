@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using RTSSelector.Scripts.Runtime.Core;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace RTSSelector.Scripts.OOP.Runtime.Core
+namespace RTSSelector.Scripts.Runtime.OOP.Core
 {
     public class RTSSelector : MonoBehaviour
     {

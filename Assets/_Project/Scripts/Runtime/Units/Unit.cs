@@ -1,4 +1,4 @@
-using RTSSelector.Scripts.OOP.Runtime.Core;
+using RTSSelector.Scripts.Runtime.OOP.Core;
 using UnityEngine;
 
 public class Unit : MonoBehaviour

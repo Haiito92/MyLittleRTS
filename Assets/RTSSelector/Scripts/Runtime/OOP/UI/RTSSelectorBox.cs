@@ -1,19 +1,18 @@
-using System;
-using RTSSelector.Scripts.OOP.Runtime.Core;
+using RTSSelector.Scripts.Runtime.Core;
 using UnityEngine;
 
-namespace RTSSelector.Scripts.Runtime.UI
+namespace RTSSelector.Scripts.Runtime.OOP.UI
 {
     public class RTSSelectorBox : MonoBehaviour
     {
-        private OOP.Runtime.Core.RTSSelector _rtsSelector;
+        private OOP.Core.RTSSelector _rtsSelector;
 
         [SerializeField] private RectTransform _selectorBox;
         [SerializeField] private Canvas _canvas;
         
         private void Start()
         {
-            _rtsSelector = OOP.Runtime.Core.RTSSelector.Instance;
+            _rtsSelector = OOP.Core.RTSSelector.Instance;
             
             _rtsSelector.SelectionStarted += OnSelectionStarted;
             _rtsSelector.SelectionUpdated += OnSelectionUpdated;

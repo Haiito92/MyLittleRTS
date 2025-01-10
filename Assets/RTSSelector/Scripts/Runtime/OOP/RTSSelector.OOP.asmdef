@@ -1,7 +1,9 @@
 {
-    "name": "RTSSelectorRuntime",
+    "name": "RTSSelector.OOP",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:79fafc1f6f7051b4e88e8936c451e189"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
