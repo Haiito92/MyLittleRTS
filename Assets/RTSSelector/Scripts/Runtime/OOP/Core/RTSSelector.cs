@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using RTSSelector.Scripts.Runtime.Core;
+using Unity.Entities;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -64,6 +65,11 @@ namespace RTSSelector.Scripts.Runtime.OOP.Core
             SelectionStartedEvent.AddListener(() => SelectionStarted?.Invoke());
             SelectionUpdatedEvent.AddListener(() => SelectionUpdated?.Invoke());
             SelectionEndedEvent.AddListener(() => SelectionEnded?.Invoke());
+
+            // EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+            // EntityQuery query = entityManager.CreateEntityQuery(new ComponentType[] { });
+            // query.get
+
         }
 
         #region Selection

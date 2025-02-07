@@ -11,9 +11,9 @@ namespace _Project.Scripts.Runtime.Units
         public override void Bake(UnitAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            // AddComponent<LocalTransform>(entity);
-            Debug.Log(authoring.Health);
-            AddComponent(entity, new HealthComponent(authoring.Health));
+            // Debug.Log(authoring.Health);
+            // AddComponent(entity, new HealthComponent(authoring.Health));
+            AddComponent(entity, new RTSTransformComponent());
             AddComponent(entity, new RTSSelectableComponent(authoring.Collider));
         }
     }

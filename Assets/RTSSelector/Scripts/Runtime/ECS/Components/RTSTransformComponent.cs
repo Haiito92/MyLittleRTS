@@ -1,19 +1,12 @@
+using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace RTSSelector.Scripts.Runtime.ECS.Components
 {
-    public class RTSTransformComponent : MonoBehaviour
+    public struct RTSTransformComponent : IComponentData
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
+        public float3 LastPosition;
+        public bool Moved;
     }
 }

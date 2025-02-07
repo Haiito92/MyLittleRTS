@@ -1,19 +1,30 @@
+using RTSSelector.Scripts.Runtime.ECS.Components;
+using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Transforms;
 using UnityEngine;
 
 namespace RTSSelector.Scripts.Runtime.ECS.Systems
 {
-    public class RTSTransformSystem : MonoBehaviour
+
+    public partial struct RTSTransformSystem : ISystem
     {
-        // Start is called before the first frame update
-        void Start()
+        partial struct UpdateTransformComponentJob : IJobEntity
         {
-        
+            void Execute(in LocalTransform transform, ref RTSTransformComponent rtsTransformComponent)
+            {
+                rtsTransformComponent.Moved = !transform.Position.Equals(rtsTransformComponent.LastPosition);
+
+                rtsTransformComponent.LastPosition = transform.Position;
+                
+                Debug.Log(rtsTransformComponent.Moved);
+            }
         }
 
-        // Update is called once per frame
-        void Update()
+        public void OnUpdate(ref SystemState state)
         {
-        
+            // UpdateTransformComponentJob updateTransformComponentJob = new UpdateTransformComponentJob();
+            new UpdateTransformComponentJob().ScheduleParallel();
         }
     }
 }

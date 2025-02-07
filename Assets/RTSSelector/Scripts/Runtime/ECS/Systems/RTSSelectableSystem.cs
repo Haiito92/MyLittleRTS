@@ -7,21 +7,28 @@ namespace RTSSelector.Scripts.Runtime.ECS.Systems
 {
     partial struct RTSSelectableSystem : ISystem
     {
-        partial struct UpdateSelectableRect : IJobEntity
+        partial struct UpdateSelectableRectJob : IJobEntity
         {
-            void Execute(ref RTSSelectableComponent rtsSelectableComponent)
+            void Execute(in RTSTransformComponent rtsTransform, ref RTSSelectableComponent rtsSelectable)
             {
-                rtsSelectableComponent.CachedRTSScreenRect = GetScreenRect(rtsSelectableComponent.ColliderRef.Value);
+                if (rtsTransform.Moved)
+                {
+                    rtsSelectable.CachedRTSScreenRect = GetScreenRect(rtsSelectable.ColliderRef.Value);
+                }
             }
         }
 
         public void OnUpdate(ref SystemState state)
         {
-            // new UpdateSelectableRect().ScheduleParallel();
-            // foreach (RTSSelectableComponent rtsSelectableComponent in SystemAPI.Query<RTSSelectableComponent>())
-            // {
-            //     Debug.Log(rtsSelectableComponent.ColliderRef.Value.gameObject.name);
-            // }
+            // new UpdateSelectableRectJob().ScheduleParallel();
+            
+            foreach (var (rtsTransform, rtsSelectable) in SystemAPI.Query<RefRO<RTSTransformComponent>, RefRW<RTSSelectableComponent>>())
+            {
+                if (rtsTransform.ValueRO.Moved)
+                {
+                    rtsSelectable.ValueRW.CachedRTSScreenRect = GetScreenRect(rtsSelectable.ValueRW.ColliderRef.Value);
+                }
+            }
         }
         
         static RTSScreenRect GetScreenRect(Collider collider)
